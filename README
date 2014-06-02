@@ -1,1 +1,59 @@
-CMDB
+sCMDB Project
+
+
+### Setup Log
+setup git repository
+create new app on djangoy using sqlite
+setup runserver as service
+open external port
+create scripts to populate and wipe data
+start hackin
+
+----------------------
+setup on djangoy:
+----------------------
+
+### Install prereqs
+
+yum install sqlite -y
+yum install git -y
+
+### Setup SSH Key if not already exists
+# https://help.github.com/articles/generating-ssh-keys
+# chose defaults & blank password
+
+cd ~
+ssh-keygen -t rsa -C "dustinhartje@gmail.com"
+
+### Add key to github.com
+
+cat ~/.ssh/id_rsa.pub
+#copy result to clipboard
+#add to github via Account Settings > SSH Keys
+
+
+### create github repo via website
+# setup "know", did not initialize during creation
+
+### Verify ssh key success
+
+ssh -T git@github.com
+Hi dustinhartje! You've successfully authenticated, but GitHub does not provide shell access.
+
+
+### create project
+
+cd /opt
+django-admin startproject know
+cd know
+touch README
+
+### configure git
+git config --global user.name "Dustin Hartje"
+git config --global user.email "dustinhartje@gmail.com"
+git init
+git add *
+git commit -m "first commit"
+git remote add origin ssh://git@github.com/dustinhartje/know.git
+git push -u origin master
+
