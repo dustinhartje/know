@@ -1,5 +1,8 @@
-sCMDB Project
+CMDB Project
 
+Built on Django
+
+Run with sqlite and django development web server (python manage.py runserver).  To be ported to MySQL and Apache WSGI for production use
 
 ### Setup Log
 setup git repository
