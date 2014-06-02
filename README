@@ -4,16 +4,18 @@ Built on Django
 
 Run with sqlite and django development web server (python manage.py runserver).  To be ported to MySQL and Apache WSGI for production use
 
-### Setup Log
+### goals
 setup git repository
 create new app on djangoy using sqlite
 setup runserver as service
-open external port
+open to world as port 5669 (inter-network, may need higher number to receive at router, TBD)
+build initial models
 create scripts to populate and wipe data
-start hackin
+start hackin views
+maintain so it can be recreated on another machine quickly
 
 ----------------------
-setup on djangoy:
+setup log from initial build on djangoy
 ----------------------
 
 ### Install prereqs
@@ -59,4 +61,17 @@ git add *
 git commit -m "first commit"
 git remote add origin ssh://git@github.com/dustinhartje/know.git
 git push -u origin master
+
+### Setup runserver as service
+
+# created /etc/init.d/knowweb based on /usr/share/doc/initscripts-*/sysvinitfiles (NOTE - add to project folder and link from /etc/init.d so it can be maintained in github also)
+#start command: python /opt/know/manage.py runserver 0.0.0.0:5669
+#stop command: TBD, probably need to kill by pid
+
+chmod +x /etc/init.d/knowweb
+chkconfig --add knowweb
+
+# open port on iptables
+iptables -I INPUT -p tcp --dport 5669 -j ACCEPT
+service iptables save
 
