@@ -1,0 +1,44 @@
+#!/bin/bash
+# chkconfig: 2345 90 10
+# description: Development web server for "KNOW" django project in /opt/know
+#
+# Source function library.
+. /etc/init.d/functions
+
+DAEMON="/opt/know/manage.py"
+PARAMETERS="runserver 0.0.0.0:5669"
+
+start() {
+    echo -n "Starting $DAEMON $PARAMETERS"
+    nohup /opt/know/manage.py runserver 0.0.0.0:5669 &
+}
+
+stop() {
+    echo -n "Stopping $DAEMON $PARAMETERS"
+    ps aux | grep '/opt/know/manage.py' | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+}
+
+status() {
+        kwpid=`ps aux | grep '/opt/know/manage.py' | grep -v 'grep' | awk '{print $2}'`
+        #echo $kwpid
+        if [[ $kwpid = "" ]]
+            then echo "Know Dev Web Server is not running"
+            else echo "Know Dev Web Server is running as pid $kwpid"
+        fi
+}
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Usage: <servicename> {start|stop|status"
+        exit 1
+        ;;
+esac
+exit $?

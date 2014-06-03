@@ -64,11 +64,10 @@ git push -u origin master
 
 ### Setup runserver as service
 
-# created /etc/init.d/knowweb based on /usr/share/doc/initscripts-*/sysvinitfiles (NOTE - add to project folder and link from /etc/init.d so it can be maintained in github also)
-#start command: python /opt/know/manage.py runserver 0.0.0.0:5669
-#stop command: TBD, probably need to kill by pid
+# created /opt/know/devwebsrv script to handle service with soft link from /etc/init.d/knowweb based on /usr/share/doc/initscripts-*/sysvinitfiles
 
-chmod +x /etc/init.d/knowweb
+chmod +x /opt/know/devwebsrv
+ln -s /opt/know/devwebsrv /etc/init.d/knowweb
 chkconfig --add knowweb
 
 # open port on iptables
