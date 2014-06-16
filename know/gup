@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if (( $# != 1 ))
+then
+    echo "Comment required as first argument.  Doing nothing..."
+    exit 1
+fi
+
+cd /opt/know
+git add ./*
+git commit -a -m "$1"
+git push
