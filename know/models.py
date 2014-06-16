@@ -5,19 +5,39 @@ from django.db import models
 # Base class with common fields shared among all Configuration Items in the CMDB
 
 class baseCI(models.Model):
-    name = 
-    display_name = 
-    created = models.DateTimeField(auto_now=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    name = models.SlugField("Name", max_length=16) 
+    displayname = models.CharField("Display Name", max_length=80)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
 
-#################### ASSETS #####################
+#################### KNOWLEDGE ITEMS #####################
+
+# Procedures, file attachments, configuration data (TBD, this may become a seperate class)
+# and similar data that we can attach to other classes for automatic, timely, contextual
+# access
+
+class KnowledgeItem(baseCI):
+    types = (
+        ('esclproc', 'Escalation Procedure'),
+        ('tshtproc', 'Troubleshooting Procedure'),
+        ('warmproc', 'Warmup Procedure'),
+        ('othrproc', 'Other Procedure'),
+        ('knwnissu', 'Known Issue'),
+        ('attachmt', 'Attachment'),
+        ('note', 'Note'),
+    )
+    type = models.CharField("Type", max_length=12, choices=types)
+
+
 
 # Most hardware and logical components will be considered Assets
 
 class Asset(baseCI):
+    isvirtual = models.BooleanField("Virtual?")
+
     class Meta:
         abstract = True
 
@@ -26,14 +46,34 @@ class Asset(baseCI):
 # cluster representations, or be hosted uniquely on a single HardwareDevice.
 
 class LogicalSystem(Asset):  
+    primaryip = models.IPAddressField("Primary IP", blank=True)
+    managementip = models.IPAddressField("Management IP", blank=True)
+
     class Meta:
         abstract = True
 
-class Server(LogicalSystem):
-
 class VirtualizationHost(LogicalSystem):
+    hvfamilies = (
+        ('vmware', 'VMware'),
+        ('hyperv', 'HyperV'),
+        ('zen', 'Zen'),
+    )
+    hvfamily = models.CharField("Hypervisor Family", max_length=15, choices=hvfamilies)
+    hvversion = models.CharField("Hypervisor Version", max_length=80)
+
+class Server(LogicalSystem):
+    osfamilies = (
+        ('windows', 'Windows'),
+        ('linux', 'Linux'),
+        ('other', 'Other'),
+    )
+    osfamily = models.CharField("OS Family", max_length=15, choices=osfamilies)
+    osversion = models.CharField("OS Version", max_length=80)
+    vhost = models.ForeignKey(VirtualizationHost, verbose_name="Virtualization Host", null=True, on_delete=models.SET_NULL, blank=True)
+
 
 class LoadBalancer(LogicalSystem):
+    pass
 
 
 # Applications are autonomous services and groups of services providing
@@ -42,12 +82,16 @@ class LoadBalancer(LogicalSystem):
 # level logical categorization representing their collective business function.
 
 class Application(Asset):
+    apptag = models.SlugField(max_length=12)
+    knowledgeitems = models.ManyToManyField(KnowledgeItem, verbose_name="Knowledge Items", null=True, blank=True)
+
 
 # Application Roles are individual functions performed by one or more systems.
 # These are unique and systems involved should be interchangable either through
 # load balancing, clustering, or manual active/passive changeover.
 
 class ApplicationRole(Asset):
+    roletag = models.SlugField(max_length=12)
 
 # Components are the physical or logical devices contained within other Assets
 # These may include physical or logical server components such as CPUs and Disk
@@ -63,39 +107,14 @@ class LBComponent(Component):
         abstract = True
 
 class LBCService(LBComponent):
+    pass
 
 class LBCServer(LBComponent):
+    pass
 
 class LBCVirtualServer(LBComponent):
+    pass
 
-
-#################### KNOWLEDGE ITEMS #####################
-
-# Procedures, file attachments, configuration data (TBD, this may become a seperate class)
-# and similar data that we can attach to other classes for automatic, timely, contextual
-# access
-
-class KnowledgeItem(baseCI):
-    class Meta:
-        abstract = True
-
-
-class Procedure(KnowledgeItem):
-    class Meta:
-        abstract = True
-
-class EscalationProcedure(Procedure):
-
-class TroubleshootingProcedure(Procedure):
-
-class WarmupProcedure(Procedure):
-
-
-class Information(KnowledgeItem):
-
-class Attachment(KnowledgeItem):
-
-class KnownIssues(KnowledgeItem):
 
 
 
