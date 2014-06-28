@@ -10,6 +10,9 @@ class baseCI(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    def __unicode__(self):
+        return self.displayname
+
     class Meta:
         abstract = True
 
@@ -31,12 +34,13 @@ class KnowledgeItem(baseCI):
     )
     type = models.CharField("Type", max_length=12, choices=types)
 
-
+#################### ASSETS #####################
 
 # Most hardware and logical components will be considered Assets
 
 class Asset(baseCI):
     isvirtual = models.BooleanField("Virtual?")
+    related_knowledgeitems = models.ManyToManyField(KnowledgeItem, verbose_name="Knowledge Items", blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -69,7 +73,7 @@ class Server(LogicalSystem):
     )
     osfamily = models.CharField("OS Family", max_length=15, choices=osfamilies)
     osversion = models.CharField("OS Version", max_length=80)
-    vhost = models.ForeignKey(VirtualizationHost, verbose_name="Virtualization Host", null=True, on_delete=models.SET_NULL, blank=True)
+    vhost = models.ForeignKey(VirtualizationHost, verbose_name="Virtualization Host", related_name="relatedservers", blank=True, null=True, on_delete=models.SET_NULL)
 
 
 class LoadBalancer(LogicalSystem):
@@ -83,7 +87,7 @@ class LoadBalancer(LogicalSystem):
 
 class Application(Asset):
     apptag = models.SlugField(max_length=12)
-    knowledgeitems = models.ManyToManyField(KnowledgeItem, verbose_name="Knowledge Items", null=True, blank=True)
+    #knowledgeitems = models.ManyToManyField(KnowledgeItem, verbose_name="Knowledge Items", related_name="related_applications", blank=True, null=True)
 
 
 # Application Roles are individual functions performed by one or more systems.

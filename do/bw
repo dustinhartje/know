@@ -1,0 +1,4 @@
+#!/bin/bash
+
+service knowweb stop
+service knowweb start

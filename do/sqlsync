@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#Django does not create tables for ManyToManyFields relationships with syncdb, so run syncdb first then run all sqlstatements to get the ones it misses.  Poor form Django... poor form indeed.
+
+/opt/know/manage.py syncdb
+/opt/know/manage.py sql know | sqlite3 /opt/know/var/knowdb/db.sqlite
