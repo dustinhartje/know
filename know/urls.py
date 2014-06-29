@@ -14,4 +14,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^$', 'know.views.index'),
+    url(r'^servers/$', 'know.views.servers', name="servers"),
+    url(r'^servers/(?P<server_id>\d+)/$', 'know.views.server_detail', name="server_detail"),
 )

@@ -1,4 +1,3 @@
 #!/bin/bash
 rm -f /opt/know/var/knowdb/db.sqlite
-/opt/know/manage.py flush
 /opt/know/do/sqlsync

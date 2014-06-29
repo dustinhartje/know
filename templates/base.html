@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>K.N.O.W. | {% block title %}Home{% endblock %}</title>
+    </head>
+    <body>
+        <div id="header">
+            <h1>K.N.O.W.</h1>
+            <a href="servers/">Servers</a> | Other neat stuff
+            <hr/>
+        </div>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>

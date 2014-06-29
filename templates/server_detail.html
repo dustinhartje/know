@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Server Detail ({{server.displayname}}) {% endblock %}
+{% block content %}
+<h2>{{server.displayname}}</h2>
+<p>
+<b>Name:</b> {{server.name}}<br/>
+<b>Display Name:</b> {{server.displayname}}<br/>
+<b>Created:</b> {{server.created}}<br/>
+<b>Last Updated:</b> {{server.updated}}<br/>
+<b>Virtual?>:</b> {{server.isvirtual}}<br/>
+<b>Primary IP:</b> {{server.primaryip}}<br/>
+<b>Management IP:</b> {{server.managementip}}<br/>
+<b>OS Family:</b> {{server.osfamily}}<br/>
+<b>OS Version:</b> {{server.osversion}}<br/>
+<b>Virtualization Host:</b> {{server.vhost}}<br/>
+<b>KIs:</b><br/>
+<ul>
+   {% for ki in server.related_knowledgeitems.all %}
+     <li>{{ki.name}}</li>
+   {% empty %}
+     <li>No Knowledge Items Attached</li>
+   {% endfor %}
+</ul>
+{% endblock %}

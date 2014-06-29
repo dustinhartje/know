@@ -1,2 +1,2 @@
 #!/bin/bash
-sqlite3 -interactive /opt/know/var/knowdb/db.sqlite
+/opt/know/manage.py dbshell
